@@ -29,9 +29,9 @@ async function run() {
 
     // get all bills
     app.get("/all-bills", async (req, res) => {
-      const result = await billsCollection.find().sort({ date: -1 }).toArray();
-      //   console.log(result);
-
+      const category = req.query.category;
+      const query = category && category !== "All" ? { category } : {};
+      const result = await billsCollection.find(query).toArray();
       res.send(result);
     });
 
