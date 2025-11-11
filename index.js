@@ -4,6 +4,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = 3000;
 
+// middleware
 app.use(cors());
 app.use(express.json());
 
@@ -60,6 +61,15 @@ async function run() {
       const billData = req.body;
       const result = await myBillsCollection.insertOne(billData);
       res.send(result);
+    });
+
+    // get bills for logged-in user
+    app.get("/my-bills", async (req, res) => {
+      const email = req.query.email;
+      if (!email) return res.status(400).send({ error: "Email required" });
+
+      const bills = await myBillsCollection.find({ email }).toArray();
+      res.send(bills);
     });
 
     await client.db("admin").command({ ping: 1 });
