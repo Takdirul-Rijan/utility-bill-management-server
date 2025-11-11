@@ -25,7 +25,9 @@ async function run() {
 
     const db = client.db("SmartBillHub-db");
     const billsCollection = db.collection("bills");
+    const myBillsCollection = db.collection("myBills");
 
+    // get all bills
     app.get("/all-bills", async (req, res) => {
       const result = await billsCollection.find().sort({ date: -1 }).toArray();
       //   console.log(result);
@@ -33,6 +35,7 @@ async function run() {
       res.send(result);
     });
 
+    // get 6 recent bills
     app.get("/bills", async (req, res) => {
       const result = await billsCollection
         .find()
@@ -44,10 +47,18 @@ async function run() {
       res.send(result);
     });
 
+    // get bill details by id
     app.get("/bills/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await billsCollection.findOne(query);
+      res.send(result);
+    });
+
+    // save paid bill to myBills
+    app.post("/myBills", async (req, res) => {
+      const billData = req.body;
+      const result = await myBillsCollection.insertOne(billData);
       res.send(result);
     });
 
