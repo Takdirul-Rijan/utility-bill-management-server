@@ -26,6 +26,13 @@ async function run() {
     const db = client.db("SmartBillHub-db");
     const billsCollection = db.collection("bills");
 
+    app.get("/all-bills", async (req, res) => {
+      const result = await billsCollection.find().sort({ date: -1 }).toArray();
+      //   console.log(result);
+
+      res.send(result);
+    });
+
     app.get("/bills", async (req, res) => {
       const result = await billsCollection
         .find()
@@ -56,7 +63,7 @@ async function run() {
 run().catch(console.dir);
 
 app.get("/", (req, res) => {
-  res.send("Smart server is running");
+  res.send("SmartBillHub server is running");
 });
 
 app.listen(port, () => {
