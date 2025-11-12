@@ -1,0 +1,4 @@
+node_modules
+.env
+smartbillhub-firebase-admin.json
+.vercel
